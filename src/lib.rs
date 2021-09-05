@@ -192,7 +192,7 @@ App::build()
 pub struct BigBrainPlugin;
 
 impl Plugin for BigBrainPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system(thinker::thinker_system.system());
         app.add_system(thinker::thinker_component_attach_system.system());
         app.add_system(thinker::thinker_component_detach_system.system());
