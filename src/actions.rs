@@ -216,8 +216,7 @@ pub fn steps_system(
                         let step_builder = steps_action.steps[steps_action.active_step].clone();
                         let step_ent = step_builder.attach(&mut cmd, *actor);
                         cmd.entity(seq_ent).push_children(&[step_ent]);
-                        let mut step_state = states.get_mut(step_ent).expect("oops");
-                        *step_state = ActionState::Requested;
+                        steps_action.active_ent.0 = step_ent;
                     }
                 }
             }

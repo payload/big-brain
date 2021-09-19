@@ -162,7 +162,7 @@ pub fn init_entities(mut cmd: Commands) {
 
 fn main() {
     // Once all that's done, we just add our systems and off we go!
-    App::build()
+    App::new()
         .add_plugins(DefaultPlugins)
         .add_plugin(BigBrainPlugin)
         .add_startup_system(init_entities.system())

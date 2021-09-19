@@ -23,10 +23,10 @@ Wrapper for Actor entities. In terms of Scorers, Thinkers, and Actions, this is 
 pub struct Actor(pub Entity);
 
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct ActionEnt(pub Entity);
+pub struct ActionEnt(pub Entity);
 
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct ScorerEnt(pub Entity);
+pub struct ScorerEnt(pub Entity);
 
 /**
 The "brains" behind this whole operation. A `Thinker` is what glues together `Actions` and `Scorers` and shapes larger, intelligent-seeming systems.
