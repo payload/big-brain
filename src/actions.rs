@@ -53,7 +53,7 @@ impl ActionState {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub(crate) struct ActionBuilderId;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub(crate) struct ActionBuilderWrapper(pub Arc<ActionBuilderId>, pub Arc<dyn ActionBuilder>);
 
 impl ActionBuilderWrapper {
@@ -67,7 +67,7 @@ Trait that must be defined by types in order to be `ActionBuilder`s. `ActionBuil
 
 The `build()` method MUST be implemented for any `ActionBuilder`s you want to define.
 */
-pub trait ActionBuilder: std::fmt::Debug + Send + Sync {
+pub trait ActionBuilder: Send + Sync {
     /**
     MUST insert your concrete Action component into the `action` [`Entity`], using `cmd`. You _may_ use `actor`, but it's perfectly normal to just ignore it.
 
@@ -103,7 +103,6 @@ pub trait ActionBuilder: std::fmt::Debug + Send + Sync {
 /**
 [`ActionBuilder`] for the [`Steps`] component. Constructed through `Steps::build()`.
 */
-#[derive(Debug)]
 pub struct StepsBuilder {
     steps: Vec<Arc<dyn ActionBuilder>>,
 }
@@ -149,7 +148,6 @@ Thinker::build()
         )
 ```
 */
-#[derive(Debug)]
 pub struct Steps {
     steps: Vec<Arc<dyn ActionBuilder>>,
     active_step: usize,
@@ -244,7 +242,6 @@ pub fn steps_system(
 /**
 [`ActionBuilder`] for the [`Concurrent`] component. Constructed through `Concurrent::build()`.
 */
-#[derive(Debug)]
 pub struct ConcurrentlyBuilder {
     actions: Vec<Arc<dyn ActionBuilder>>,
 }

@@ -9,7 +9,7 @@ use crate::{
 };
 
 // Contains different types of Considerations and Actions
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Choice {
     pub(crate) scorer: ScorerEnt,
     pub(crate) action: ActionBuilderWrapper,
@@ -23,7 +23,6 @@ impl Choice {
     }
 }
 
-#[derive(Debug)]
 pub struct ChoiceBuilder {
     pub when: Arc<dyn ScorerBuilder>,
     pub then: Arc<dyn ActionBuilder>,

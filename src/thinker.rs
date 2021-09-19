@@ -50,7 +50,6 @@ pub fn init_entities(mut cmd: Commands) {
 }
 ```
  */
-#[derive(Debug)]
 pub struct Thinker {
     picker: Arc<dyn Picker>,
     otherwise: Option<ActionBuilderWrapper>,
@@ -70,7 +69,7 @@ impl Thinker {
 /**
 This is what you actually use to configure Thinker behavior. It's a plain old [`ActionBuilder`], as well.
  */
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct ThinkerBuilder {
     picker: Option<Arc<dyn Picker>>,
     otherwise: Option<ActionBuilderWrapper>,

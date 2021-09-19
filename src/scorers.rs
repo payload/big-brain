@@ -44,7 +44,7 @@ Trait that must be defined by types in order to be `ScorerBuilder`s. `ScorerBuil
 
 The `build()` method MUST be implemented for any `ScorerBuilder`s you want to define.
 */
-pub trait ScorerBuilder: std::fmt::Debug + Sync + Send {
+pub trait ScorerBuilder: Sync + Send {
     /**
     MUST insert your concrete Scorer component into the Scorer [`Entity`], using `cmd`. You _may_ use `actor`, but it's perfectly normal to just ignore it.
 
@@ -156,7 +156,7 @@ pub fn all_or_nothing_system(query: Query<(Entity, &AllOrNothing)>, mut scores: 
         score.set(crate::evaluators::clamp(sum, 0.0, 1.0));
     }
 }
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct AllOrNothingBuilder {
     threshold: f32,
     scorers: Vec<Arc<dyn ScorerBuilder>>,
@@ -241,7 +241,7 @@ pub fn sum_of_scorers_system(query: Query<(Entity, &SumOfScorers)>, mut scores: 
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct SumOfScorersBuilder {
     threshold: f32,
     scorers: Vec<Arc<dyn ScorerBuilder>>,
@@ -330,7 +330,7 @@ pub fn winning_scorer_system(
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct WinningScorerBuilder {
     threshold: f32,
     scorers: Vec<Arc<dyn ScorerBuilder>>,
@@ -417,7 +417,7 @@ pub fn evaluating_scorer_system(
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct EvaluatingScorerBuilder {
     pub scorer: Arc<dyn ScorerBuilder>,
     pub evaluator: Arc<dyn Evaluator>,
