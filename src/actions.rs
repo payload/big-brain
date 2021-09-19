@@ -175,17 +175,18 @@ pub fn steps_system(
 ) {
     use ActionState::*;
     for (seq_ent, Actor(actor), mut steps_action) in steps_q.iter_mut() {
-        let current_state = states.get_mut(seq_ent).expect("uh oh").clone();
+        let active_ent = steps_action.active_ent.0;
+        let current_state = states.get_mut(seq_ent).unwrap().clone();
+        // println!("steps seq_state {:?}", current_state);
         match current_state {
             Requested => {
                 // Begin at the beginning
-                let mut step_state = states.get_mut(steps_action.active_ent.0).expect("oops");
-                *step_state = Requested;
-                let mut current_state = states.get_mut(seq_ent).expect("uh oh");
-                *current_state = Executing;
+                *states.get_mut(active_ent).unwrap() = Requested;
+                *states.get_mut(seq_ent).unwrap() = Executing;
             }
             Executing => {
-                let mut step_state = states.get_mut(steps_action.active_ent.0).expect("bug");
+                let mut step_state = states.get_mut(active_ent).unwrap();
+                // println!("steps step_state {:?}", step_state);
                 match *step_state {
                     Init => {
                         // Request it! This... should not really happen? But just in case I'm missing something... :)
@@ -200,6 +201,7 @@ pub fn steps_system(
                         let mut seq_state = states.get_mut(seq_ent).expect("idk");
                         *seq_state = step_state;
                         cmd.entity(steps_action.active_ent.0).despawn_recursive();
+                        // println!("steps cancelled failure");
                     }
                     Success if steps_action.active_step == steps_action.steps.len() - 1 => {
                         // We're done! Let's just be successful
@@ -207,6 +209,7 @@ pub fn steps_system(
                         let mut seq_state = states.get_mut(seq_ent).expect("idk");
                         *seq_state = step_state;
                         cmd.entity(steps_action.active_ent.0).despawn_recursive();
+                        // println!("steps success *seq_state {:?}", *seq_state);
                     }
                     Success => {
                         // Deactivate current step and go to the next step
@@ -217,15 +220,21 @@ pub fn steps_system(
                         let step_ent = step_builder.attach(&mut cmd, *actor);
                         cmd.entity(seq_ent).push_children(&[step_ent]);
                         steps_action.active_ent.0 = step_ent;
+                        // println!("steps success");
                     }
                 }
             }
             Cancelled => {
                 // Cancel current action
-                let mut step_state = states.get_mut(steps_action.active_ent.0).expect("oops");
-                *step_state = ActionState::Cancelled;
+                let mut step_state = states.get_mut(active_ent).expect("oops");
+                if *step_state == Requested || *step_state == Executing {
+                    *step_state = Cancelled;
+                } else if *step_state == Failure || *step_state == Success {
+                    *states.get_mut(seq_ent).unwrap() = step_state.clone();
+                }
             }
             Init | Success | Failure => {
+                // println!("steps end {:?}", current_state);
                 // Do nothing.
             }
         }
